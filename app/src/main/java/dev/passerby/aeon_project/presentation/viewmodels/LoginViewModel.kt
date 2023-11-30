@@ -17,10 +17,8 @@ class LoginViewModel(application: Application) : AndroidViewModel(application) {
 
     private val repository = MainRepositoryImpl(application)
 
-    private val getPaymentsListUseCase = GetPaymentsListUseCase(repository)
     private val isTokenAddedUseCase = IsTokenAddedUseCase(repository)
     private val loginUseCase = LoginUseCase(repository)
-    private val removeTokenUseCase = RemoveTokenUseCase(repository)
 
     private val _tokenSuccess = MutableLiveData<String>()
     val tokenSuccess : LiveData<String>

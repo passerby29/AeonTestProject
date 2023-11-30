@@ -4,8 +4,10 @@ import android.app.Application
 import android.content.Context.MODE_PRIVATE
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
+import dev.passerby.aeon_project.data.Constants.APP_KEY
 import dev.passerby.aeon_project.data.Constants.PREF_NAME
 import dev.passerby.aeon_project.data.Constants.TOKEN_KEY
+import dev.passerby.aeon_project.data.Constants.VERSION
 import dev.passerby.aeon_project.data.mappers.LoginMapper
 import dev.passerby.aeon_project.data.mappers.PaymentsMapper
 import dev.passerby.aeon_project.data.models.PaymentsResponseDto
@@ -69,6 +71,8 @@ class MainRepositoryImpl(application: Application) : MainRepository {
 
     override suspend fun getPaymentsList(): List<PaymentModel> {
         val tokenHeader = HashMap<String, String>()
+        tokenHeader[APP_KEY] = "12345"
+        tokenHeader[VERSION] = "1"
         tokenHeader[TOKEN_KEY] = sharedPreferences.getString(TOKEN_KEY, "").toString()
 
         paymentsResult.postValue(BaseResponse.Loading())

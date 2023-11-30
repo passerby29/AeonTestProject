@@ -6,9 +6,13 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import dev.passerby.aeon_project.databinding.FragmentLoginBinding
 import dev.passerby.aeon_project.domain.models.LoginDataModel
 import dev.passerby.aeon_project.presentation.viewmodels.LoginViewModel
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class LoginFragment : Fragment() {
 
@@ -30,13 +34,25 @@ class LoginFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel.login(LoginDataModel("demo", "12345"))
-        viewModel.tokenSuccess.observe(viewLifecycleOwner){
-            binding.tv.text = it
+
+        binding.loginMainButton.setOnClickListener {
+            val login = binding.loginLoginEditText.text?.trim().toString()
+            val password = binding.loginPasswordEditText.text?.trim().toString()
+
+            viewModel.login(LoginDataModel(login, password))
+            viewModel.tokenSuccess.observe(viewLifecycleOwner) {
+                    if (it.equals("true")) {
+                        nav()
+                    } else {
+                        binding.loginLoginEditText.error = "error data"
+                        binding.loginPasswordEditText.error = "error data"
+                    }
+            }
         }
-        if (viewModel.isTokenAdded){
-            binding.added.text = "true"
-        }
+    }
+
+    private fun nav(){
+        findNavController().navigate(LoginFragmentDirections.actionLoginFragmentToPaymentsFragment())
     }
 
     override fun onDestroy() {
