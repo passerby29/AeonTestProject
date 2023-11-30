@@ -34,6 +34,9 @@ class LoginFragment : Fragment() {
         viewModel.tokenSuccess.observe(viewLifecycleOwner){
             binding.tv.text = it
         }
+        if (viewModel.isTokenAdded){
+            binding.added.text = "true"
+        }
     }
 
     override fun onDestroy() {
