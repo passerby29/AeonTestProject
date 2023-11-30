@@ -36,6 +36,11 @@ class MainRepositoryImpl(application: Application) : MainRepository {
         editor.remove(TOKEN_KEY)
     }
 
+    override fun isTokenAdded(): Boolean {
+        val token = sharedPreferences.getString(TOKEN_KEY, "")
+        return !token.isNullOrEmpty()
+    }
+
     override suspend fun login(loginDataModel: LoginDataModel): TokenResponseModel {
 
         loginResult.postValue(BaseResponse.Loading())

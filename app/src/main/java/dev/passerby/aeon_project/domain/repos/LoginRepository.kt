@@ -8,6 +8,8 @@ import dev.passerby.aeon_project.domain.models.TokenResponseModel
 interface MainRepository {
     fun removeToken()
 
+    fun isTokenAdded(): Boolean
+
     suspend fun login(loginDataModel: LoginDataModel): TokenResponseModel
     suspend fun getPaymentsList(): List<PaymentModel>
 }
