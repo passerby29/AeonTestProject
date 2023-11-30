@@ -15,6 +15,7 @@ import dev.passerby.aeon_project.data.network.BaseResponse
 import dev.passerby.aeon_project.domain.models.LoginDataModel
 import dev.passerby.aeon_project.domain.models.PaymentModel
 import dev.passerby.aeon_project.domain.models.TokenModel
+import dev.passerby.aeon_project.domain.models.TokenResponseModel
 import dev.passerby.aeon_project.domain.repos.MainRepository
 
 class MainRepositoryImpl(application: Application) : MainRepository {
@@ -35,7 +36,7 @@ class MainRepositoryImpl(application: Application) : MainRepository {
         editor.remove(TOKEN_KEY)
     }
 
-    override suspend fun login(loginDataModel: LoginDataModel): TokenModel {
+    override suspend fun login(loginDataModel: LoginDataModel): TokenResponseModel {
 
         loginResult.postValue(BaseResponse.Loading())
 
@@ -46,10 +47,10 @@ class MainRepositoryImpl(application: Application) : MainRepository {
             if (response.code() == 200) {
                 loginResult.postValue(BaseResponse.Success(response.body()))
 
-                editor.putString(TOKEN_KEY, response.body()!!.token.token)
+                editor.putString(TOKEN_KEY, response.body()!!.token.token).apply()
 
                 Log.d(TAG, "loginTry: ${response.isSuccessful}")
-                return loginMapper.mapTokenDtoToEntity(response.body()!!.token)
+                return loginMapper.mapResponseDtoToEntity(response.body()!!)
             } else {
                 loginResult.postValue(BaseResponse.Error(response.message()))
                 Log.d(TAG, "loginElse: ${response.message()}")
@@ -58,7 +59,7 @@ class MainRepositoryImpl(application: Application) : MainRepository {
             loginResult.postValue(BaseResponse.Error(ex.message))
             Log.d(TAG, "loginCatch: $ex")
         }
-        return TokenModel("")
+        return TokenResponseModel(TokenModel(""), "false")
     }
 
     override suspend fun getPaymentsList(): List<PaymentModel> {
