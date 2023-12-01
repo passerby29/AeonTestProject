@@ -1,33 +1,104 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
-
-    <TextView
-        android:id="@+id/paymentTitle"
+    android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools"
+    app:cardBackgroundColor="@color/card_background_color"
+    android:layout_marginVertical="8dp">
+    
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:layout_marginHorizontal="16dp"
+        android:layout_marginVertical="8dp"
+        android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/paymentAmount"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/paymentTitle" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/white"
+            android:fontFamily="@font/outfit_medium"
+            android:textSize="18sp"
+            android:text="@string/title_title"/>
+
+        <TextView
+            android:id="@+id/paymentTitleTextView"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textColor="@color/white"
+            android:layout_marginStart="8dp"
+            android:fontFamily="@font/outfit_semi_bold"
+            android:textSize="24sp"
+            android:layout_weight="1"
+            tools:text="@string/title_title"/>
+        </LinearLayout>
+        
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/white"
+                android:fontFamily="@font/outfit_medium"
+                android:textSize="18sp"
+                android:text="@string/amount_title"/>
+
+            <TextView
+                android:id="@+id/paymentAmountTextView"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:textColor="@color/white"
+                android:layout_marginStart="8dp"
+                android:fontFamily="@font/outfit_semi_bold"
+                android:textSize="24sp"
+                android:layout_weight="1"
+                tools:text="@string/amount_title"/>
+        </LinearLayout>
 
 
-    <TextView
-        android:id="@+id/paymentCreated"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/paymentAmount" />
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:orientation="horizontal">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/white"
+                android:fontFamily="@font/outfit_medium"
+                android:textSize="18sp"
+                android:text="@string/date_title"/>
+
+            <TextView
+                android:id="@+id/paymentDateTextView"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:textColor="@color/white"
+                android:layout_marginStart="8dp"
+                android:fontFamily="@font/outfit_semi_bold"
+                android:textSize="24sp"
+                android:layout_weight="1"
+                tools:text="@string/date_title"/>
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/paymentErrorTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/white"
+            android:layout_marginTop="16dp"
+            android:visibility="gone"
+            android:fontFamily="@font/outfit_medium"
+            android:textSize="16sp"
+            android:text="@string/error_text"/>
+    </LinearLayout>
+</androidx.cardview.widget.CardView>

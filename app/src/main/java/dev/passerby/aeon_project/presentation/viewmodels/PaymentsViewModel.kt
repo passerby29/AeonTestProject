@@ -26,8 +26,11 @@ class PaymentsViewModel(application: Application) : AndroidViewModel(application
         getPayments()
     }
 
-    private fun getPayments() =
-        viewModelScope.launch {
-            _payments.value = getPaymentsListUseCase().toList()
-        }
+    fun removeToken(){
+        removeTokenUseCase()
+    }
+
+    private fun getPayments() = viewModelScope.launch {
+        _payments.value = getPaymentsListUseCase().toList()
+    }
 }

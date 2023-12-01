@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">AeonTestProject</string>
+    <string name="title_title">Название:</string>
+    <string name="amount_title">Сумма:</string>
+    <string name="date_title">Дата:</string>
+    <string name="error_text">Произошла ошибка обработки данных. Обратитесь в поддержку</string>
 </resources>

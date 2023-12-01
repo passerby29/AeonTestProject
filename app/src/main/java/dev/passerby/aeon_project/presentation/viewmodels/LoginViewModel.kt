@@ -19,19 +19,17 @@ class LoginViewModel(application: Application) : AndroidViewModel(application) {
     private val loginUseCase = LoginUseCase(repository)
 
     private val _tokenSuccess = MutableLiveData<String>()
-    val tokenSuccess : LiveData<String>
+    val tokenSuccess: LiveData<String>
         get() = _tokenSuccess
 
     val isTokenAdded = isTokenAddedUseCase()
 
-    fun login(loginDataModel: LoginDataModel) {
-        viewModelScope.launch {
-            val loginData = loginUseCase(loginDataModel)
-            _tokenSuccess.value = loginData.success
-        }
+    fun login(loginDataModel: LoginDataModel) = viewModelScope.launch {
+        val loginData = loginUseCase(loginDataModel)
+        _tokenSuccess.value = loginData.success
     }
 
-    fun resetToken(){
+    fun resetToken() {
         _tokenSuccess.value = ""
     }
 }

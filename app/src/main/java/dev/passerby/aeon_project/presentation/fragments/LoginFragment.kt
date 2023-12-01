@@ -33,11 +33,14 @@ class LoginFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        checkToken()
+
         addTextChangeListeners()
         observeViewModel()
 
         binding.loginCheckButton.setOnClickListener {
             binding.loading.visibility = View.VISIBLE
+            binding.loginCheckButton.isEnabled = false
 
             val login = binding.loginLoginEditText.text?.trim().toString()
             val password = binding.loginPasswordEditText.text?.trim().toString()
@@ -54,12 +57,14 @@ class LoginFragment : Fragment() {
                         "" -> {
                             loginLoginContainer.error = null
                             loginPasswordContainer.error = null
+                            binding.loginCheckButton.isEnabled = true
                         }
 
                         "false" -> {
                             loginLoginContainer.error = "Неправильные данные"
                             loginPasswordContainer.error = "Неправильные данные"
                             loading.visibility = View.GONE
+                            binding.loginCheckButton.isEnabled = true
                         }
 
                         "true" -> {
@@ -94,6 +99,12 @@ class LoginFragment : Fragment() {
 
                 override fun afterTextChanged(p0: Editable?) {}
             })
+        }
+    }
+
+    private fun checkToken() {
+        if (viewModel.isTokenAdded) {
+            navToPayments()
         }
     }
 

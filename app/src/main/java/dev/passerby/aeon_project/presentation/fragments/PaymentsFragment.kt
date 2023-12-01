@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import dev.passerby.aeon_project.databinding.FragmentPaymentsBinding
 import dev.passerby.aeon_project.presentation.adapters.PaymentsAdapter
@@ -43,6 +44,10 @@ class PaymentsFragment : Fragment() {
         }
         viewModel.payments.observe(viewLifecycleOwner) {
             paymentsAdapter.submitList(it)
+        }
+        binding.paymentsLogoutButton.setOnClickListener {
+            findNavController().navigate(PaymentsFragmentDirections.actionPaymentsFragmentToLoginFragment())
+            viewModel.removeToken()
         }
     }
 

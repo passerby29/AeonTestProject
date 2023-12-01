@@ -7,7 +7,7 @@ data class PaymentDto(
     @SerializedName("amount")
     val amount: Any?,
     @SerializedName("created")
-    val created: Int?,
+    val created: Long?,
     @SerializedName("id")
     val id: Int,
     @SerializedName("title")

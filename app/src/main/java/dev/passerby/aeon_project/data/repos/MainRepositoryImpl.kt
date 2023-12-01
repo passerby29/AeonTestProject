@@ -35,7 +35,7 @@ class MainRepositoryImpl(application: Application) : MainRepository {
         MutableLiveData()
 
     override fun removeToken() {
-        editor.remove(TOKEN_KEY)
+        editor.putString(TOKEN_KEY, "").apply()
     }
 
     override fun isTokenAdded(): Boolean {
