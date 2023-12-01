@@ -4,8 +4,10 @@ import android.app.Application
 import android.content.Context.MODE_PRIVATE
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
+import dev.passerby.aeon_project.data.Constants.APP_KEY
 import dev.passerby.aeon_project.data.Constants.PREF_NAME
 import dev.passerby.aeon_project.data.Constants.TOKEN_KEY
+import dev.passerby.aeon_project.data.Constants.VERSION
 import dev.passerby.aeon_project.data.mappers.LoginMapper
 import dev.passerby.aeon_project.data.mappers.PaymentsMapper
 import dev.passerby.aeon_project.data.models.PaymentsResponseDto
@@ -15,6 +17,7 @@ import dev.passerby.aeon_project.data.network.BaseResponse
 import dev.passerby.aeon_project.domain.models.LoginDataModel
 import dev.passerby.aeon_project.domain.models.PaymentModel
 import dev.passerby.aeon_project.domain.models.TokenModel
+import dev.passerby.aeon_project.domain.models.TokenResponseModel
 import dev.passerby.aeon_project.domain.repos.MainRepository
 
 class MainRepositoryImpl(application: Application) : MainRepository {
@@ -32,10 +35,15 @@ class MainRepositoryImpl(application: Application) : MainRepository {
         MutableLiveData()
 
     override fun removeToken() {
-        editor.remove(TOKEN_KEY)
+        editor.putString(TOKEN_KEY, "").apply()
     }
 
-    override suspend fun login(loginDataModel: LoginDataModel): TokenModel {
+    override fun isTokenAdded(): Boolean {
+        val token = sharedPreferences.getString(TOKEN_KEY, "")
+        return !token.isNullOrEmpty()
+    }
+
+    override suspend fun login(loginDataModel: LoginDataModel): TokenResponseModel {
 
         loginResult.postValue(BaseResponse.Loading())
 
@@ -46,10 +54,10 @@ class MainRepositoryImpl(application: Application) : MainRepository {
             if (response.code() == 200) {
                 loginResult.postValue(BaseResponse.Success(response.body()))
 
-                editor.putString(TOKEN_KEY, response.body()!!.token.token)
+                editor.putString(TOKEN_KEY, response.body()!!.token.token).apply()
 
                 Log.d(TAG, "loginTry: ${response.isSuccessful}")
-                return loginMapper.mapTokenDtoToEntity(response.body()!!.token)
+                return loginMapper.mapResponseDtoToEntity(response.body()!!)
             } else {
                 loginResult.postValue(BaseResponse.Error(response.message()))
                 Log.d(TAG, "loginElse: ${response.message()}")
@@ -58,11 +66,13 @@ class MainRepositoryImpl(application: Application) : MainRepository {
             loginResult.postValue(BaseResponse.Error(ex.message))
             Log.d(TAG, "loginCatch: $ex")
         }
-        return TokenModel("")
+        return TokenResponseModel(TokenModel(""), "false")
     }
 
     override suspend fun getPaymentsList(): List<PaymentModel> {
         val tokenHeader = HashMap<String, String>()
+        tokenHeader[APP_KEY] = "12345"
+        tokenHeader[VERSION] = "1"
         tokenHeader[TOKEN_KEY] = sharedPreferences.getString(TOKEN_KEY, "").toString()
 
         paymentsResult.postValue(BaseResponse.Loading())
