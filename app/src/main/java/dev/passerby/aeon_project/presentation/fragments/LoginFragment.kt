@@ -1,6 +1,8 @@
 package dev.passerby.aeon_project.presentation.fragments
 
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,9 +12,6 @@ import androidx.navigation.fragment.findNavController
 import dev.passerby.aeon_project.databinding.FragmentLoginBinding
 import dev.passerby.aeon_project.domain.models.LoginDataModel
 import dev.passerby.aeon_project.presentation.viewmodels.LoginViewModel
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 
 class LoginFragment : Fragment() {
 
@@ -34,24 +33,71 @@ class LoginFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        addTextChangeListeners()
+        observeViewModel()
 
-        binding.loginMainButton.setOnClickListener {
+        binding.loginCheckButton.setOnClickListener {
+            binding.loading.visibility = View.VISIBLE
+
             val login = binding.loginLoginEditText.text?.trim().toString()
             val password = binding.loginPasswordEditText.text?.trim().toString()
 
             viewModel.login(LoginDataModel(login, password))
-            viewModel.tokenSuccess.observe(viewLifecycleOwner) {
-                    if (it.equals("true")) {
-                        nav()
-                    } else {
-                        binding.loginLoginEditText.error = "error data"
-                        binding.loginPasswordEditText.error = "error data"
+        }
+    }
+
+    private fun observeViewModel() {
+        viewModel.apply {
+            with(binding) {
+                tokenSuccess.observe(viewLifecycleOwner) {
+                    when (it) {
+                        "" -> {
+                            loginLoginContainer.error = null
+                            loginPasswordContainer.error = null
+                        }
+
+                        "false" -> {
+                            loginLoginContainer.error = "Неправильные данные"
+                            loginPasswordContainer.error = "Неправильные данные"
+                            loading.visibility = View.GONE
+                        }
+
+                        "true" -> {
+                            loginLoginContainer.error = null
+                            loginPasswordContainer.error = null
+                            navToPayments()
+                            loading.visibility = View.GONE
+                        }
                     }
+                }
             }
         }
     }
 
-    private fun nav(){
+    private fun addTextChangeListeners() {
+        with(binding) {
+            loginLoginEditText.addTextChangedListener(object : TextWatcher {
+                override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
+
+                override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                    viewModel.resetToken()
+                }
+
+                override fun afterTextChanged(p0: Editable?) {}
+            })
+            loginPasswordEditText.addTextChangedListener(object : TextWatcher {
+                override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
+
+                override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                    viewModel.resetToken()
+                }
+
+                override fun afterTextChanged(p0: Editable?) {}
+            })
+        }
+    }
+
+    private fun navToPayments() {
         findNavController().navigate(LoginFragmentDirections.actionLoginFragmentToPaymentsFragment())
     }
 

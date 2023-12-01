@@ -7,10 +7,8 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import dev.passerby.aeon_project.data.repos.MainRepositoryImpl
 import dev.passerby.aeon_project.domain.models.LoginDataModel
-import dev.passerby.aeon_project.domain.usecases.GetPaymentsListUseCase
 import dev.passerby.aeon_project.domain.usecases.IsTokenAddedUseCase
 import dev.passerby.aeon_project.domain.usecases.LoginUseCase
-import dev.passerby.aeon_project.domain.usecases.RemoveTokenUseCase
 import kotlinx.coroutines.launch
 
 class LoginViewModel(application: Application) : AndroidViewModel(application) {
@@ -31,5 +29,9 @@ class LoginViewModel(application: Application) : AndroidViewModel(application) {
             val loginData = loginUseCase(loginDataModel)
             _tokenSuccess.value = loginData.success
         }
+    }
+
+    fun resetToken(){
+        _tokenSuccess.value = ""
     }
 }
